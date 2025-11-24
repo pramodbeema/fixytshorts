@@ -1,0 +1,80 @@
+/* 1. Style the button element itself (the circular part with the icon) */
+/* Custom styles for the vertical action bar button (MAX SPECIFICITY) */
+
+#shorts-converter-wrapper .shorts-converter-button {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  
+  /* Standard size and shape (Forced) */
+  width: 48px !important; 
+  height: 48px !important; 
+  border-radius: 50% !important;
+  
+  /* DEFAULT DARKER COLOR (Forced) */
+  background-color: #272727 !important; 
+  
+  padding: 0 !important;
+  margin: 0 !important; 
+  border: none !important;
+  cursor: pointer !important;
+  opacity: 1 !important;
+}
+
+/* HOVER/ACTIVE STATE (Forced) */
+#shorts-converter-wrapper .shorts-converter-button:hover,
+#shorts-converter-wrapper .shorts-converter-button:active {
+  background-color: #3f3f3f !important;
+}
+
+/* Style the label ("Convert" text) */
+#shorts-converter-wrapper .label {
+  /* Text Size Tweak: Now forced to 12px, which is the standard native size */
+  font-size: 13px !important; 
+  color: white !important; 
+  margin-top: 4px !important;
+  text-align: center !important;
+  height: auto !important; /* Allow the height to be natural */
+  line-height: 1.2 !important;
+}
+
+/* Style the SVG icon for centering and size (Forced Fixes Deformity) */
+#shorts-converter-wrapper svg {
+  /* Ensures correct box model and forces size */
+  display: block !important; 
+  width: 24px !important;   
+  height: 24px !important;  
+  fill: white !important;
+}
+
+/* General class cleanup (overrides old styles) */
+.shorts-converter-button {
+  position: relative;
+  margin: 0; 
+  transition: none;
+}
+
+/* 2. Style the label ("Convert" text) */
+#shorts-converter-wrapper .label {
+  font-size: 10px;
+  color: white;
+  margin-top: 4px;
+  text-align: center;
+  height: 14px;
+  line-height: 1.4;
+}
+
+/* 3. Style the SVG icon for centering and size */
+#shorts-converter-wrapper svg {
+  width: 24px !important; 
+  height: 24px !important;
+  fill: white;
+}
+
+/* General class cleanup */
+.shorts-converter-button {
+  position: relative;
+  margin: 0; 
+  transition: none;
+}

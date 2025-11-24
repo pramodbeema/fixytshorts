@@ -1,5 +1,4 @@
-![image](https://github.com/user-attachments/assets/61005c48-0363-414a-b78d-04a5be28478b)
-
+<img width="128" height="128" alt="icon128" src="https://github.com/user-attachments/assets/124c26a7-ca8e-4b69-b1fb-f70290b90872" />
 
 
 # Fix YT Shorts

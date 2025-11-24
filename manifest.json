@@ -1,0 +1,48 @@
+{
+    "manifest_version": 3,
+    "name": "Fix YT Shorts by Pramod Beema",
+    "version": "1.0.0",
+    "description": "Fix YouTube Shorts with audio track navigation, seeking controls, and video converter - Created by Pramod Beema",
+    "author": "Pramod Beema",
+    "developer": {
+        "name": "Pramod Beema",
+        "url": "https://github.com/pramodbeema"
+    },
+    "permissions": [
+        "activeTab"
+    ],
+    "host_permissions": [
+        "https://www.youtube.com/*"
+    ],
+    "content_scripts": [
+        {
+            "matches": [
+                "*://*.youtube.com/*"
+            ],
+            "js": [
+                "content.js"
+            ],
+            "css": [
+                "styles.css"
+            ],
+            "run_at": "document_end"
+        }
+    ],
+    "commands": {
+        "convert-short": {
+            "suggested_key": {
+                "default": "Ctrl+Shift+F",
+                "mac": "Command+Shift+F"
+            },
+            "description": "Convert YouTube Short to regular video"
+        }
+    },
+    "background": {
+        "service_worker": "background.js"
+    },
+    "icons": {
+        "16": "icon16.png",
+        "48": "icon48.png",
+        "128": "icon128.png"
+    }
+}
