@@ -1,6 +1,10 @@
 ![image](https://github.com/user-attachments/assets/99515cb5-16d1-4c88-9721-d37af0d06dee)
 
 
+
+
+
+
 # Fix YT Shorts
 
 **A powerful Chrome extension to fix and enhance YouTube Shorts experience with audio navigation, seeking, and video conversion.**
@@ -41,7 +45,12 @@ Convert YouTube Shorts to regular video format with a click or **Ctrl+Shift+F** 
 
 - **Manifest Version**: 3
 - **Permissions**: activeTab, YouTube host permissions
-- **Works on**: Chrome, Opera, and other Chromium-based browsers
+- **Works on**: All Chromium-based browsers, including:
+  - Google Chrome
+  - Microsoft Edge
+  - Brave
+  - Opera
+  - Vivaldi
 
 ## 👤 Author
 
