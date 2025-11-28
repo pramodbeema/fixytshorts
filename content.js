@@ -1,6 +1,11 @@
 // Fix YT Shorts Extension
 // Created by: Pramod Beema (https://github.com/pramodbeema)
-// Combines: Audio Track Navigator + Shorts Seeker + Shorts to Video Converter + Caption Toggle
+// 5 Powerful Features:
+//   1. Audio Track Navigator - Press 'a' to open audio track menu
+//   2. Shorts Seeker - Arrow keys to seek forward/backward 5 seconds
+//   3. Shorts to Video Converter - Convert Shorts to regular videos
+//   4. Caption Toggle - Press 'c' to toggle captions in Shorts
+//   5. Restart from Beginning - Press '0' to restart Short from start
 //
 // IMPORTANT: For Audio Track Navigation, use mouse/trackpad to select the desired
 // audio track from the menu. Keyboard navigation is not supported for track selection.
@@ -338,6 +343,20 @@
                 toggleCaptionsShorts();
             }
             // For regular videos, let native YouTube behavior handle 'c'
+            return;
+        }
+
+        // Feature 5: Restart from Beginning (press '0')
+        if (e.key === '0' && !e.ctrlKey && !e.metaKey && !e.altKey && !e.shiftKey && !isTyping) {
+            if (isShorts()) {
+                e.preventDefault();
+                e.stopPropagation();
+                const video = getActiveVideo();
+                if (video) {
+                    video.currentTime = 0;
+                }
+            }
+            // For regular videos, let native YouTube behavior handle '0'
             return;
         }
 
