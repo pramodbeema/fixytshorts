@@ -11,7 +11,7 @@
 
 # Fix YT Shorts
 
-**A powerful Chrome extension to fix and enhance YouTube Shorts experience with audio navigation, seeking, and video conversion.**
+**A powerful Chrome extension to fix and enhance YouTube Shorts experience with 5 essential features: audio navigation, seeking controls, caption toggle, restart from beginning, and video conversion.**
 
 Created by **Pramod Beema**
 
@@ -31,14 +31,20 @@ Convert YouTube Shorts to regular video format with a click or **Ctrl+Shift+F** 
 ### 4. Caption Toggle
 Press **'c'** to toggle captions on/off in YouTube Shorts, just like in regular videos.
 
+### 5. Restart from Beginning
+Press **'0'** to restart the current Short from the beginning, matching YouTube's native behavior for regular videos.
+
 ## ⌨️ Keyboard Shortcuts
 
 | Shortcut | Action |
 |----------|--------|
 | **a** | Open audio track menu (use mouse/trackpad to select) |
 | **c** | Toggle Captions in Shorts |
+| **0** | Restart Short from beginning |
 | **← →** | Seek in Shorts (5 seconds) |
 | **Ctrl+Shift+F** | Convert Short to video |
+
+> **Note:** Arrow key seeking only works when pressed alone. Modifier key combinations (like Alt+Left for browser back navigation) work normally.
 
 ## 📥 Installation
 
