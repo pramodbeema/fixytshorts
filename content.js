@@ -1,6 +1,6 @@
 // Fix YT Shorts Extension
 // Created by: Pramod Beema (https://github.com/pramodbeema)
-// Combines: Audio Track Navigator + Shorts Seeker + Shorts to Video Converter
+// Combines: Audio Track Navigator + Shorts Seeker + Shorts to Video Converter + Caption Toggle
 //
 // IMPORTANT: For Audio Track Navigation, use mouse/trackpad to select the desired
 // audio track from the menu. Keyboard navigation is not supported for track selection.
@@ -342,7 +342,14 @@
         }
 
         // Feature 2: Shorts Seeker (arrow keys)
+        // Only seek when arrow keys are pressed ALONE (no modifier keys)
         if (isShorts() && (e.key === 'ArrowLeft' || e.key === 'ArrowRight') && !isTyping) {
+            // Check if any modifier keys are pressed
+            if (e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) {
+                // Allow default browser behavior (e.g., Alt+Left = back navigation)
+                return;
+            }
+
             e.preventDefault();
             e.stopPropagation();
 
