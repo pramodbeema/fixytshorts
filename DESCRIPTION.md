@@ -21,10 +21,15 @@ Tired of the limited controls on YouTube Shorts? **Fix YT Shorts** empowers you 
     *   **Shortcut:** Press **Ctrl+Shift+F** (or Command+Shift+F on Mac).
     *   Also available via a convenient button click.
 
+4.  **💬 Caption Toggle**
+    *   Toggle captions on/off in Shorts just like in regular videos.
+    *   **Shortcut:** Press **'c'**.
+
 ---
 
 **⌨️ SHORTCUTS AT A GLANCE:**
 *   **'a'** : Open Audio Track Menu
+*   **'c'** : Toggle Captions
 *   **← / →** : Seek 5 seconds backward/forward
 *   **Ctrl+Shift+F** : Convert Short to Regular Video
 
