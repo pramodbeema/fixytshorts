@@ -6,11 +6,6 @@
 
 
 
-
-
-<img width="128" height="128" alt="icon128" src="https://github.com/user-attachments/assets/124c26a7-ca8e-4b69-b1fb-f70290b90872" />
-
-
 # Fix YT Shorts
 
 **A powerful Chrome extension to fix and enhance YouTube Shorts experience with 5 essential features: audio navigation, seeking controls, caption toggle, restart from beginning, and video conversion.**
