@@ -1,8 +1,12 @@
-![image](https://github.com/user-attachments/assets/99515cb5-16d1-4c88-9721-d37af0d06dee)
+![promotile](https://github.com/user-attachments/assets/e6d03125-118f-424f-9578-9a6399be991d)
 
 
 
 
+
+
+
+<img width="128" height="128" alt="icon128" src="https://github.com/user-attachments/assets/124c26a7-ca8e-4b69-b1fb-f70290b90872" />
 
 
 # Fix YT Shorts
@@ -24,11 +28,15 @@ Use **arrow keys** (← →) to seek forward/backward 5 seconds in YouTube Short
 ### 3. Shorts to Video Converter
 Convert YouTube Shorts to regular video format with a click or **Ctrl+Shift+F** keyboard shortcut.
 
+### 4. Caption Toggle
+Press **'c'** to toggle captions on/off in YouTube Shorts, just like in regular videos.
+
 ## ⌨️ Keyboard Shortcuts
 
 | Shortcut | Action |
 |----------|--------|
 | **a** | Open audio track menu (use mouse/trackpad to select) |
+| **c** | Toggle Captions in Shorts |
 | **← →** | Seek in Shorts (5 seconds) |
 | **Ctrl+Shift+F** | Convert Short to video |
 
