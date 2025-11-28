@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "Fix YT Shorts by Pramod Beema",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "Fix YouTube Shorts with audio track navigation, seeking controls, and video converter - Created by Pramod Beema",
     "author": "Pramod Beema",
     "developer": {
