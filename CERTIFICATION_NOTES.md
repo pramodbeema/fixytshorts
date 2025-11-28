@@ -17,5 +17,10 @@ This extension enhances the YouTube Shorts and Video experience and does not req
     *   Press **Ctrl+Shift+F** (or **Command+Shift+F** on macOS).
     *   **Expected Result:** The page should reload/redirect to the standard YouTube video player interface (`youtube.com/watch?v=...`) for that same video.
 
+4.  **Caption Toggle:**
+    *   Navigate to any YouTube Short.
+    *   Press the **'c'** key.
+    *   **Expected Result:** Captions/Subtitles should toggle on or off. You should see the caption text appear/disappear or the "CC" button state change.
+
 **Dependencies:**
 *   This extension depends on the YouTube website structure to function. It interacts with the DOM to trigger native menus and controls.
