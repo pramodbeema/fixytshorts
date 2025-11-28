@@ -113,6 +113,67 @@
     }
 
     // ========================================
+    // FEATURE 4: CAPTION TOGGLE (Shorts)
+    // Press 'c' to toggle captions
+    // ========================================
+
+    async function toggleCaptionsShorts() {
+        try {
+            const activeReel = document.querySelector('ytd-reel-video-renderer[is-active]');
+            if (!activeReel) return;
+
+            // Try finding the CC button directly in the player controls
+            // The selector might vary, looking for common attributes
+            const buttons = activeReel.querySelectorAll('button');
+            let ccButton = null;
+
+            for (const btn of buttons) {
+                const label = btn.getAttribute('aria-label') || btn.title || '';
+                if (label.toLowerCase().includes('caption') || label.toLowerCase().includes('subtitles')) {
+                    ccButton = btn;
+                    break;
+                }
+            }
+
+            if (ccButton) {
+                ccButton.click();
+                return;
+            }
+
+            // If not found directly, it might be in the "More actions" menu
+            // But usually, for Shorts, it's either on the overlay or in the 3-dot menu.
+            // Let's try the 3-dot menu approach if direct button fails.
+
+            const moreButton = activeReel.querySelector('ytd-menu-renderer button');
+            if (moreButton) {
+                moreButton.click();
+                await new Promise(resolve => setTimeout(resolve, 100));
+
+                // Look for "Captions" in the menu
+                const menuItems = document.querySelectorAll('ytd-menu-service-item-renderer, tp-yt-paper-item');
+                let captionItem = null;
+
+                for (const item of menuItems) {
+                    if (item.textContent.toLowerCase().includes('caption') || item.textContent.toLowerCase().includes('subtitles')) {
+                        captionItem = item;
+                        break;
+                    }
+                }
+
+                if (captionItem) {
+                    captionItem.click();
+                } else {
+                    // Close menu if not found
+                    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', keyCode: 27, bubbles: true }));
+                }
+            }
+
+        } catch (error) {
+            console.error('Error toggling captions in Shorts:', error);
+        }
+    }
+
+    // ========================================
     // FEATURE 2: SHORTS SEEKER
     // Arrow keys to seek forward/backward
     // ========================================
@@ -266,6 +327,17 @@
             } else {
                 navigateToAudioTrackVideo();
             }
+            return;
+        }
+
+        // Feature 4: Caption Toggle (press 'c')
+        if (e.key.toLowerCase() === 'c' && !e.ctrlKey && !e.metaKey && !e.altKey && !e.shiftKey && !isTyping) {
+            if (isShorts()) {
+                e.preventDefault();
+                e.stopPropagation();
+                toggleCaptionsShorts();
+            }
+            // For regular videos, let native YouTube behavior handle 'c'
             return;
         }
 
