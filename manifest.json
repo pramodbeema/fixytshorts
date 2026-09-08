@@ -1,15 +1,16 @@
 {
     "manifest_version": 3,
     "name": "Fix YT Shorts by Pramod Beema",
-    "version": "1.2.0",
-    "description": "Fix YouTube Shorts with 5 powerful features: audio track navigation, seeking controls, caption toggle, restart from beginning, and video converter - Created by Pramod Beema",
+    "version": "1.4",
+    "description": "YouTube Shorts: Audio track navigation, Enable Seeking, Caption toggle, Restart short, Play Short as Video.",
     "author": "Pramod Beema",
     "developer": {
         "name": "Pramod Beema",
         "url": "https://github.com/pramodbeema"
     },
     "permissions": [
-        "activeTab"
+        "activeTab",
+        "storage"
     ],
     "host_permissions": [
         "https://www.youtube.com/*"
@@ -36,6 +37,15 @@
             },
             "description": "Convert YouTube Short to regular video"
         }
+    },
+    "action": {
+        "default_popup": "popup.html",
+        "default_icon": {
+            "16": "icon16.png",
+            "48": "icon48.png",
+            "128": "icon128.png"
+        },
+        "default_title": "Fix YT Shorts"
     },
     "background": {
         "service_worker": "background.js"

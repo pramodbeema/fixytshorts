@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fix YT Shorts</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+
+<body>
+    <div class="popup-container">
+        <header>
+            <img src="icon48.png" alt="Logo" class="logo">
+            <div>
+                <h1>Fix YT Shorts <span class="version">v1.4</span></h1>
+                <p class="author">by Pramod Beema</p>
+            </div>
+        </header>
+        <main>
+            <div class="settings-section">
+                <div class="settings-header">
+                    <label for="seek-duration" class="settings-label">Seek Duration: <span id="seek-duration-val" class="highlight-val">5s</span></label>
+                </div>
+                <div class="settings-control">
+                    <input type="range" id="seek-duration" min="1" max="30" step="1" value="5" class="seek-slider">
+                    <div class="seek-chips">
+                        <button type="button" class="seek-chip" data-val="2">2s</button>
+                        <button type="button" class="seek-chip active" data-val="5">5s</button>
+                        <button type="button" class="seek-chip" data-val="10">10s</button>
+                        <button type="button" class="seek-chip" data-val="15">15s</button>
+                    </div>
+                </div>
+            </div>
+
+            <ul class="features-list">
+                <li>
+                    <span class="key">A</span>
+                    <span class="desc">Audio Track Menu</span>
+                </li>
+                <li>
+                    <span class="key">← →</span>
+                    <span class="desc">Seek Short</span>
+                </li>
+                <li>
+                    <span class="key">Ctrl+Shift+F</span>
+                    <span class="desc">Convert to Video</span>
+                </li>
+                <li>
+                    <span class="key">C</span>
+                    <span class="desc">Toggle Captions</span>
+                </li>
+                <li>
+                    <span class="key">0</span>
+                    <span class="desc">Restart Video</span>
+                </li>
+            </ul>
+        </main>
+        <footer>
+            <a href="https://github.com/pramodbeema/fixytshorts" target="_blank">Visit the project on GitHub</a>
+        </footer>
+    </div>
+    <script src="popup.js"></script>
+</body>
+
+</html>

@@ -1,5 +1,13 @@
 // Fix YT Shorts - Background Service Worker
 // Created by: Pramod Beema (https://github.com/pramodbeema)
+
+// Open welcome page on install
+chrome.runtime.onInstalled.addListener((details) => {
+  if (details.reason === 'install' || details.reason === 'update') {
+    chrome.tabs.create({ url: 'welcome.html' });
+  }
+});
+
 // Listen for the keyboard command
 chrome.commands.onCommand.addListener((command) => {
   if (command === 'convert-short') {

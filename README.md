@@ -2,61 +2,64 @@
 
 ![image](https://github.com/user-attachments/assets/1e83c450-80e3-4d0e-86f5-592c305d987c)
 
+# Fix YT Shorts (v1.4)
 
-
-
-
-# Fix YT Shorts
-
-**A powerful Chrome extension to fix and enhance YouTube Shorts experience with 5 essential features: audio navigation, seeking controls, caption toggle, restart from beginning, and video conversion.**
+**A powerful Chrome extension to fix and enhance the YouTube Shorts experience with 5 essential features: audio navigation, seeking controls, caption toggle, restart from beginning, and video conversion.**
 
 Created by **Pramod Beema**
 
-## 🎯 Features
+## 🎯 5 Essential Features
 
-### 1. Audio Track Navigator
-Press **'a'** to instantly open the audio track selection menu on any YouTube video or Short.
+### 1. 🎧 Audio Track Navigator
+Press **'a'** to instantly open the audio track selection menu with **full keyboard navigation** (`↑` / `↓` + `Enter`, number keys `1`–`9`, or press **'a'** again to cycle through tracks). Arrow navigation is strictly isolated so it will never scroll your Short!
 
-> **⚠️ IMPORTANT:** Use your **mouse/trackpad** to select the desired audio track from the menu. Keyboard navigation for track selection is not supported.
+### 2. ⏩ Shorts Seeker (Customizable Duration)
+Use **arrow keys** (← →) to seek in YouTube Shorts with native-style visual feedback. Set your desired seek duration in seconds directly in the extension popup (slider or 2s, 5s, 10s, 15s quick chips).
 
-### 2. Shorts Seeker  
-Use **arrow keys** (← →) to seek forward/backward 5 seconds in YouTube Shorts with native-style visual feedback.
+### 3. 🔄 Shorts to Video Converter
+Convert YouTube Shorts to regular video format with a click on the YouTube-native on-screen button or the **Ctrl+Shift+F** keyboard shortcut.
 
-### 3. Shorts to Video Converter
-Convert YouTube Shorts to regular video format with a click or **Ctrl+Shift+F** keyboard shortcut.
+### 4. 💬 Caption Toggle
+Press **'c'** to toggle or select captions in YouTube Shorts with full keyboard support (`↑` / `↓` + `Enter` or press **'c'** again to cycle).
 
-### 4. Caption Toggle
-Press **'c'** to toggle captions on/off in YouTube Shorts, just like in regular videos.
-
-### 5. Restart from Beginning
-Press **'0'** to restart the current Short from the beginning, matching YouTube's native behavior for regular videos.
+### 5. ⏮️ Restart from Beginning
+Press **'0'** to restart the current Short from the beginning (`0:00`), matching YouTube's native behavior for regular videos.
 
 ## ⌨️ Keyboard Shortcuts
 
 | Shortcut | Action |
 |----------|--------|
-| **a** | Open audio track menu (use mouse/trackpad to select) |
-| **c** | Toggle Captions in Shorts |
-| **0** | Restart Short from beginning |
-| **← →** | Seek in Shorts (5 seconds) |
-| **Ctrl+Shift+F** | Convert Short to video |
-
-> **Note:** Arrow key seeking only works when pressed alone. Modifier key combinations (like Alt+Left for browser back navigation) work normally.
+| **a** | Open audio track menu / cycle audio tracks |
+| **c** | Toggle / cycle Captions in Shorts |
+| **0** | Restart Short from beginning (`0:00`) |
+| **← →** | Seek in Shorts (custom duration from settings) |
+| **Ctrl+Shift+F** | Convert Short to regular video |
+| **↑ ↓** | Navigate menu items when Audio/Captions menu is open |
+| **Enter** / **Space** | Select focused menu item |
+| **1 – 9** | Directly select track / caption item by index |
+| **Escape** | Dismiss menu without changing |
 
 ## 📥 Installation
 
 1. Download or clone this repository
-2. Open Chrome/Opera → `chrome://extensions/`
+2. Open Chrome/Edge/Brave/Opera → `chrome://extensions/`
 3. Enable **Developer mode**
 4. Click **Load unpacked**
-5. Select the extension folder
+5. Select this folder
 6. Done! 🎉
+
+## 🆕 What's New in v1.4
+- **Full Keyboard Menu Navigation**: Audio Track and Caption menus now support arrow keys (`↑` / `↓`) and `Enter`, number keys (`1`–`9`), or quick cycling with `a` / `c` without requiring a mouse.
+- **Playback Protection**: Arrow navigation inside menus strictly traps keyboard events so the background Short never scrolls or changes video.
+- **Customizable Seek Duration**: Configure your preferred seek duration in the extension popup with instant sync.
+- **Clamped Seek Overlay**: Visual feedback is kept strictly inside the Shorts player viewport.
+- **Modern YouTube Action Button**: The on-screen Convert button matches YouTube's latest UI layout, typography, and contrast.
 
 ## 🔧 Technical Details
 
 - **Manifest Version**: 3
-- **Permissions**: activeTab, YouTube host permissions
-- **Works on**: All Chromium-based browsers, including:
+- **Permissions**: activeTab, storage, YouTube host permissions
+- **Works on**: All Chromium-based browsers:
   - Google Chrome
   - Microsoft Edge
   - Brave
