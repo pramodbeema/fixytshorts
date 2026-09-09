@@ -40,7 +40,9 @@ Press **'0'** to restart the current Short from the beginning (`0:00`), matching
 | **Escape** | Dismiss menu without changing |
 
 ## 📥 Installation
-
+### Chrome Web Store
+[**Install Fix YT Shorts from the Chrome Web Store**](https://chromewebstore.google.com/detail/fix-yt-shorts-by-pramod-b/kcnepcpcdokdicblglohbfnokiddgjla)
+### Manual installation:
 1. Download or clone this repository
 2. Open Chrome/Edge/Brave/Opera → `chrome://extensions/`
 3. Enable **Developer mode**
