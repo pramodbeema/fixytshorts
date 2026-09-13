@@ -15,31 +15,37 @@
     // ========================================
 
     let seekSeconds = 5;
+    let autoScrollEnabled = false;
 
-    function loadSeekSettings() {
+    function loadExtensionSettings() {
         if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
-            chrome.storage.local.get({ seekDuration: 5 }, (res) => {
-                if (res && res.seekDuration) {
-                    seekSeconds = parseInt(res.seekDuration, 10) || 5;
+            chrome.storage.local.get({ seekDuration: 5, autoScroll: false }, (res) => {
+                if (res) {
+                    if (res.seekDuration) seekSeconds = parseInt(res.seekDuration, 10) || 5;
+                    autoScrollEnabled = Boolean(res.autoScroll);
                 }
             });
         } else {
             const stored = localStorage.getItem('seekDuration');
-            if (stored) {
-                seekSeconds = parseInt(stored, 10) || 5;
-            }
+            if (stored) seekSeconds = parseInt(stored, 10) || 5;
+            autoScrollEnabled = localStorage.getItem('autoScroll') === 'true';
         }
     }
 
     if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.onChanged) {
         chrome.storage.onChanged.addListener((changes, area) => {
-            if (area === 'local' && changes.seekDuration) {
-                seekSeconds = parseInt(changes.seekDuration.newValue, 10) || 5;
+            if (area === 'local') {
+                if (changes.seekDuration) {
+                    seekSeconds = parseInt(changes.seekDuration.newValue, 10) || 5;
+                }
+                if (changes.autoScroll !== undefined) {
+                    autoScrollEnabled = Boolean(changes.autoScroll.newValue);
+                }
             }
         });
     }
 
-    loadSeekSettings();
+    loadExtensionSettings();
 
     // ========================================
     // UTILITY FUNCTIONS
@@ -503,6 +509,96 @@
         }, 500);
     }
 
+    function showCenterHUD(text) {
+        const old = document.getElementById('shorts-center-hud');
+        if (old) old.remove();
+
+        const activeReel = getActiveReel();
+        const video = getActiveVideo();
+        const ref = (activeReel && activeReel.querySelector('#player-container, #player, .html5-video-player')) || video;
+        if (!ref) return;
+
+        const rect = ref.getBoundingClientRect();
+        const wrapper = document.createElement('div');
+        wrapper.id = 'shorts-center-hud';
+        wrapper.textContent = text;
+        wrapper.style.cssText = `
+            position: fixed;
+            top: ${rect.top + rect.height * 0.5}px;
+            left: ${rect.left + rect.width * 0.5}px;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            padding: 12px 24px;
+            border-radius: 28px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            font-size: 22px;
+            font-weight: 600;
+            font-family: 'YouTube Sans', Roboto, Arial, sans-serif;
+            z-index: 9999999;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.6);
+            animation: ytFadeOut 0.65s ease-out forwards;
+        `;
+
+        document.body.appendChild(wrapper);
+        setTimeout(() => {
+            if (wrapper.parentNode) wrapper.remove();
+        }, 650);
+    }
+
+    // ========================================
+    // FEATURE 8: AUTO-SCROLL (HANDS-FREE MODE)
+    // ========================================
+    function scrollToNextShort() {
+        if (!isShorts() || !autoScrollEnabled) return;
+        const nextButton = document.querySelector(
+            '#navigation-button-down button, ' +
+            'ytd-shorts [aria-label*="Next video" i], ' +
+            'button[aria-label*="Next video" i]'
+        );
+        if (nextButton) {
+            nextButton.click();
+            return;
+        }
+
+        // Fallback: keyboard down dispatch
+        window.dispatchEvent(new KeyboardEvent('keydown', {
+            key: 'ArrowDown',
+            code: 'ArrowDown',
+            keyCode: 40,
+            which: 40,
+            bubbles: true,
+            cancelable: true
+        }));
+    }
+
+    let lastVideoAttached = null;
+    function checkAutoScroll() {
+        if (!isShorts()) return;
+        const video = getActiveVideo();
+        if (!video) return;
+
+        if (video !== lastVideoAttached) {
+            lastVideoAttached = video;
+            // Attach end-of-video listener to scroll when enabled
+            video.addEventListener('ended', () => {
+                if (autoScrollEnabled) scrollToNextShort();
+            });
+            video.addEventListener('timeupdate', () => {
+                if (autoScrollEnabled && video.duration > 1 && video.currentTime >= video.duration - 0.3) {
+                    scrollToNextShort();
+                }
+            });
+        }
+    }
+
+    setInterval(checkAutoScroll, 500);
+
     const seekStyle = document.createElement('style');
     seekStyle.textContent = `
         @keyframes ytArrowRight {
@@ -522,6 +618,181 @@
     document.head.appendChild(seekStyle);
 
     // ========================================
+    // SHARED: BUILD CLONED NATIVE-STYLE BUTTON
+    // ========================================
+
+    function buildClonedButton(nativeHolder, id, ariaLabel, svgPath, labelText, onClickFn) {
+        let wrapper;
+        if (nativeHolder) {
+            wrapper = nativeHolder.cloneNode(true);
+            wrapper.id = id;
+
+            const button = wrapper.querySelector('button');
+            if (button) {
+                button.id = id + '-btn';
+                button.setAttribute('aria-label', ariaLabel);
+                button.title = ariaLabel;
+                button.removeAttribute('disabled');
+                // Ensure our CSS background selector matches
+                button.classList.add('shorts-fyt-button');
+
+                const iconWrapper = button.querySelector('.ytSpecButtonShapeNextIcon') || button.querySelector('yt-icon') || button;
+                if (iconWrapper) {
+                    if (typeof iconWrapper.replaceChildren === 'function') {
+                        iconWrapper.replaceChildren();
+                    } else {
+                        while (iconWrapper.firstChild) iconWrapper.removeChild(iconWrapper.firstChild);
+                    }
+                    iconWrapper.style.cssText = 'position: relative; z-index: 2; display: flex; align-items: center; justify-content: center; width: 24px; height: 24px;';
+
+                    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                    svg.setAttribute('viewBox', '0 0 24 24');
+                    svg.setAttribute('width', '24');
+                    svg.setAttribute('height', '24');
+                    svg.style.cssText = 'display: block; width: 24px; height: 24px; fill: rgb(241, 241, 241); pointer-events: none;';
+                    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    path.setAttribute('d', svgPath);
+                    path.setAttribute('fill', 'rgb(241, 241, 241)');
+                    svg.appendChild(path);
+                    iconWrapper.appendChild(svg);
+                }
+                button.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); onClickFn(wrapper, button); });
+            }
+
+            // Update label
+            const labelEl = wrapper.querySelector('label, [class*="label"], .ytSpecButtonShapeWithLabelHost') || wrapper;
+            const walker = document.createTreeWalker(labelEl, NodeFilter.SHOW_TEXT, null, false);
+            let node;
+            while ((node = walker.nextNode())) {
+                if (node.textContent.trim().length > 0) { node.textContent = labelText; break; }
+            }
+        } else {
+            // Standalone fallback
+            wrapper = document.createElement('div');
+            wrapper.id = id;
+            wrapper.className = 'style-scope ytd-reel-player-overlay-renderer';
+
+            const button = document.createElement('button');
+            button.id = id + '-btn';
+            button.className = 'shorts-fyt-button ytSpecButtonShapeNextHost ytSpecButtonShapeNextTonal ytSpecButtonShapeNextMono ytSpecButtonShapeNextSizeL ytSpecButtonShapeNextIconButton ytSpecButtonShapeNextEnableBackdropFilterExperiment ytSpecButtonShapeNextMainstageIconSize ytSpecButtonShapeNextMainstagePadding';
+            button.setAttribute('aria-label', ariaLabel);
+            button.title = ariaLabel;
+
+            const iconDiv = document.createElement('div');
+            iconDiv.className = 'ytSpecButtonShapeNextIcon ytSpecButtonShapeNextElevatedContent';
+            iconDiv.style.cssText = 'position: relative; z-index: 2; display: flex; align-items: center; justify-content: center; width: 24px; height: 24px;';
+
+            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svg.setAttribute('viewBox', '0 0 24 24');
+            svg.setAttribute('width', '24');
+            svg.setAttribute('height', '24');
+            svg.style.cssText = 'display: block; width: 24px; height: 24px; fill: rgb(241, 241, 241); pointer-events: none;';
+            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            path.setAttribute('d', svgPath);
+            path.setAttribute('fill', 'rgb(241, 241, 241)');
+            svg.appendChild(path);
+            iconDiv.appendChild(svg);
+            button.appendChild(iconDiv);
+            button.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); onClickFn(wrapper, button); });
+
+            const label = document.createElement('div');
+            label.className = 'label style-scope ytd-reel-player-overlay-renderer';
+            label.textContent = labelText;
+            wrapper.appendChild(button);
+            wrapper.appendChild(label);
+        }
+        return wrapper;
+    }
+
+    // ========================================
+    // FEATURE 8: AUTO-SCROLL BUTTON (in action bar)
+    // ========================================
+
+    // Auto-scroll repeat icon SVG path
+    const AUTO_SCROLL_SVG = 'M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z';
+    // Convert icon SVG path
+    const CONVERT_SVG = 'M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z';
+
+    function updateAutoScrollButtonState(wrapper) {
+        if (!wrapper) return;
+        if (autoScrollEnabled) {
+            wrapper.classList.add('fyt-autoscroll-active');
+            wrapper.setAttribute('data-autoscroll', 'on');
+        } else {
+            wrapper.classList.remove('fyt-autoscroll-active');
+            wrapper.setAttribute('data-autoscroll', 'off');
+        }
+    }
+
+    function createAutoScrollButton(retryCount = 0) {
+        if (!isShorts()) return;
+
+        const activeShortsPlayer = getActiveReel();
+        if (!activeShortsPlayer) return;
+
+        if (activeShortsPlayer.querySelector('#shorts-autoscroll-wrapper')) return;
+
+        const likeRenderer = activeShortsPlayer.querySelector('like-button-view-model, ytd-like-button-renderer');
+        let actionPanel = likeRenderer ? likeRenderer.closest('#actions, #actions-inner, [id*="action"]') : null;
+        if (!actionPanel && likeRenderer && likeRenderer.parentElement) actionPanel = likeRenderer.parentElement;
+        if (!actionPanel) {
+            actionPanel = activeShortsPlayer.querySelector(
+                '#actions, #actions-inner, #side-actions, ' +
+                'ytd-reel-player-overlay-renderer #actions, .ytd-reel-player-overlay-renderer #actions'
+            );
+        }
+        if (!actionPanel) return;
+
+        const nativeHolder = (likeRenderer && likeRenderer.querySelector('button'))
+            ? likeRenderer
+            : actionPanel.querySelector('like-button-view-model, share-button-view-model, ytd-like-button-renderer, ytd-share-button-renderer');
+
+        if (!nativeHolder && retryCount < 10) {
+            setTimeout(() => createAutoScrollButton(retryCount + 1), 100);
+            return;
+        }
+
+        const wrapper = buildClonedButton(
+            nativeHolder,
+            'shorts-autoscroll-wrapper',
+            'Toggle Auto-Scroll',
+            AUTO_SCROLL_SVG,
+            'Auto',
+            (wrapperEl) => {
+                autoScrollEnabled = !autoScrollEnabled;
+                updateAutoScrollButtonState(wrapperEl);
+                // Persist
+                if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
+                    chrome.storage.local.set({ autoScroll: autoScrollEnabled });
+                } else {
+                    localStorage.setItem('autoScroll', autoScrollEnabled ? 'true' : 'false');
+                }
+                if (autoScrollEnabled) {
+                    // Go to next short immediately — no need to replay from beginning
+                    showCenterHUD('\uD83D\uDD01 Auto-Scroll ON');
+                    setTimeout(() => scrollToNextShort(), 500);
+                } else {
+                    showCenterHUD('\u23F9 Auto-Scroll OFF');
+                }
+            }
+        );
+
+        // Position above the Convert button wrapper if it exists, else above likeRenderer
+        const convertWrapper = actionPanel.querySelector('#shorts-converter-wrapper');
+        if (convertWrapper) {
+            actionPanel.insertBefore(wrapper, convertWrapper);
+        } else if (likeRenderer && likeRenderer.parentElement === actionPanel) {
+            actionPanel.insertBefore(wrapper, likeRenderer);
+        } else if (actionPanel.firstChild) {
+            actionPanel.insertBefore(wrapper, actionPanel.firstChild);
+        } else {
+            actionPanel.appendChild(wrapper);
+        }
+
+        updateAutoScrollButtonState(wrapper);
+    }
+
+    // ========================================
     // FEATURE 3: SHORTS TO VIDEO CONVERTER
     // Button + Ctrl+Shift+F to convert
     // ========================================
@@ -535,7 +806,7 @@
         }
     }
 
-    function createConvertButton() {
+    function createConvertButton(retryCount = 0) {
         if (!isShorts()) return;
 
         const activeShortsPlayer = getActiveReel();
@@ -566,112 +837,37 @@
         if (!actionPanel) return;
 
         // Try cloning native button template for 100% authentic 3D light & wash effect
+        // If native buttons haven't rendered yet (common right after navigation), retry up to 10x
         const nativeHolder = (likeRenderer && likeRenderer.querySelector('button'))
             ? likeRenderer
             : actionPanel.querySelector('like-button-view-model, share-button-view-model, ytd-like-button-renderer, ytd-share-button-renderer');
 
-        let wrapper;
-        if (nativeHolder) {
-            wrapper = nativeHolder.cloneNode(true);
-            wrapper.id = 'shorts-converter-wrapper';
-
-            const button = wrapper.querySelector('button');
-            if (button) {
-                button.id = 'shorts-converter-btn';
-                button.setAttribute('aria-label', 'Convert to regular video (Ctrl+Shift+F)');
-                button.title = 'Convert to regular video (Ctrl+Shift+F)';
-
-                // Replace icon inside icon container
-                const iconWrapper = button.querySelector('.ytSpecButtonShapeNextIcon') || button.querySelector('yt-icon') || button;
-                if (iconWrapper) {
-                    if (typeof iconWrapper.replaceChildren === 'function') {
-                        iconWrapper.replaceChildren();
-                    } else {
-                        while (iconWrapper.firstChild) iconWrapper.removeChild(iconWrapper.firstChild);
-                    }
-                    iconWrapper.style.cssText = 'position: relative; z-index: 2; display: flex; align-items: center; justify-content: center; width: 24px; height: 24px;';
-
-                    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-                    svg.setAttribute('viewBox', '0 0 24 24');
-                    svg.setAttribute('width', '24');
-                    svg.setAttribute('height', '24');
-                    svg.style.cssText = 'display: block; width: 24px; height: 24px; fill: rgb(241, 241, 241); pointer-events: none;';
-
-                    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-                    path.setAttribute('d', 'M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z');
-                    path.setAttribute('fill', 'rgb(241, 241, 241)');
-
-                    svg.appendChild(path);
-                    iconWrapper.appendChild(svg);
-                }
-
-                button.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    convertToRegularVideo();
-                });
-            }
-
-            // Update label text to "Convert"
-            const label = wrapper.querySelector('label, [class*="label"], .ytSpecButtonShapeWithLabelHost') || wrapper;
-            const walker = document.createTreeWalker(label, NodeFilter.SHOW_TEXT, null, false);
-            let node;
-            while ((node = walker.nextNode())) {
-                if (node.textContent.trim().length > 0) {
-                    node.textContent = 'Convert';
-                    break;
-                }
-            }
-        } else {
-            // Standalone fallback
-            wrapper = document.createElement('div');
-            wrapper.id = 'shorts-converter-wrapper';
-            wrapper.className = 'style-scope ytd-reel-player-overlay-renderer';
-
-            const button = document.createElement('button');
-            button.id = 'shorts-converter-btn';
-            button.className = 'shorts-converter-button ytSpecButtonShapeNextHost ytSpecButtonShapeNextTonal ytSpecButtonShapeNextMono ytSpecButtonShapeNextSizeL ytSpecButtonShapeNextIconButton ytSpecButtonShapeNextEnableBackdropFilterExperiment ytSpecButtonShapeNextMainstageIconSize ytSpecButtonShapeNextMainstagePadding';
-            button.setAttribute('aria-label', 'Convert to regular video (Ctrl+Shift+F)');
-            button.title = 'Convert to regular video (Ctrl+Shift+F)';
-
-            const iconDiv = document.createElement('div');
-            iconDiv.className = 'ytSpecButtonShapeNextIcon ytSpecButtonShapeNextElevatedContent';
-            iconDiv.style.cssText = 'position: relative; z-index: 2; display: flex; align-items: center; justify-content: center; width: 24px; height: 24px;';
-
-            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-            svg.setAttribute('viewBox', '0 0 24 24');
-            svg.setAttribute('width', '24');
-            svg.setAttribute('height', '24');
-            svg.style.cssText = 'display: block; width: 24px; height: 24px; fill: rgb(241, 241, 241); pointer-events: none;';
-
-            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-            path.setAttribute('d', 'M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z');
-            path.setAttribute('fill', 'rgb(241, 241, 241)');
-
-            svg.appendChild(path);
-            iconDiv.appendChild(svg);
-            button.appendChild(iconDiv);
-
-            button.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                convertToRegularVideo();
-            });
-
-            const label = document.createElement('div');
-            label.className = 'label style-scope ytd-reel-player-overlay-renderer';
-            label.textContent = 'Convert';
-
-            wrapper.appendChild(button);
-            wrapper.appendChild(label);
+        if (!nativeHolder && retryCount < 10) {
+            setTimeout(() => createConvertButton(retryCount + 1), 100);
+            return;
         }
 
+        const wrapper = buildClonedButton(
+            nativeHolder,
+            'shorts-converter-wrapper',
+            'Convert to regular video (Ctrl+Shift+F)',
+            CONVERT_SVG,
+            'Convert',
+            () => convertToRegularVideo()
+        );
+
+        // Insert: above likeRenderer (auto-scroll button goes above this)
         if (likeRenderer && likeRenderer.parentElement === actionPanel) {
             actionPanel.insertBefore(wrapper, likeRenderer);
         } else if (actionPanel.firstChild) {
             actionPanel.insertBefore(wrapper, actionPanel.firstChild);
         } else {
             actionPanel.appendChild(wrapper);
+        }
+
+        // Now ensure auto-scroll button is above convert (create if not present)
+        if (!actionPanel.querySelector('#shorts-autoscroll-wrapper')) {
+            createAutoScrollButton();
         }
     }
 
@@ -700,7 +896,7 @@
             }
 
             // Up Arrow: Focus Previous Menu Item
-            if (e.key === 'ArrowUp') {
+            if (e.key === 'ArrowUp' && !e.ctrlKey && !e.metaKey) {
                 e.preventDefault();
                 e.stopPropagation();
                 e.stopImmediatePropagation();
@@ -712,7 +908,7 @@
             }
 
             // Down Arrow: Focus Next Menu Item
-            if (e.key === 'ArrowDown') {
+            if (e.key === 'ArrowDown' && !e.ctrlKey && !e.metaKey) {
                 e.preventDefault();
                 e.stopPropagation();
                 e.stopImmediatePropagation();
@@ -834,6 +1030,32 @@
             return;
         }
 
+
+        // Feature 7: Playback Speed Controls for Shorts (Shift + > / Shift + < or > / <)
+        if (isShorts() && (e.key === '>' || e.key === '<' || (e.shiftKey && (e.key === '.' || e.key === ',')))) {
+            e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+
+            const activeVid = getActiveVideo();
+            if (activeVid) {
+                const speeds = [0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0];
+                const current = Math.round(activeVid.playbackRate * 100) / 100;
+                let newRate;
+
+                if (e.key === '>' || e.key === '.') {
+                    newRate = speeds.find(s => s > current + 0.01) || 2.0;
+                } else {
+                    const reverse = [...speeds].reverse();
+                    newRate = reverse.find(s => s < current - 0.01) || 0.25;
+                }
+
+                document.querySelectorAll('video').forEach(v => { v.playbackRate = newRate; });
+                showCenterHUD(`⚡ ${newRate}x`);
+            }
+            return;
+        }
+
         // Feature 3: Shorts to Video Converter (Ctrl+Shift+F)
         if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'F' || e.key === 'f')) {
             e.preventDefault();
@@ -849,6 +1071,7 @@
 
     function init() {
         createConvertButton();
+        createAutoScrollButton();
     }
 
     if (document.readyState === 'loading') {
@@ -863,6 +1086,7 @@
         if (url !== lastUrl) {
             lastUrl = url;
             createConvertButton();
+            createAutoScrollButton();
         }
     }).observe(document, { subtree: true, childList: true });
 
@@ -884,7 +1108,18 @@
         });
     }
 
-    setInterval(createConvertButton, 500);
+    function createBothButtons() {
+        createConvertButton();
+        createAutoScrollButton();
+        // Re-sync auto-scroll button visual state after navigation
+        const activeReel = getActiveReel();
+        if (activeReel) {
+            const asw = activeReel.querySelector('#shorts-autoscroll-wrapper');
+            updateAutoScrollButtonState(asw);
+        }
+    }
 
-    console.log('Fix YT Shorts by Pramod Beema - All features active (v1.5)!');
+    setInterval(createBothButtons, 500);
+
+    console.log('Fix YT Shorts by Pramod Beema - All features active (v1.6)!');
 })();

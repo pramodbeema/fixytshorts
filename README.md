@@ -2,33 +2,40 @@
 
 ![image](https://github.com/user-attachments/assets/1e83c450-80e3-4d0e-86f5-592c305d987c)
 
-# Fix YT Shorts (v1.5)
+# Fix YT Shorts (v1.6)
 
-**A powerful Chrome extension to fix and enhance the YouTube Shorts experience with 5 essential features: audio navigation, seeking controls, caption toggle, restart from beginning, and video conversion.**
+**A powerful Chrome extension to fix and enhance the YouTube Shorts experience with 7 essential features: hands-free auto-scroll, playback speed controls, audio navigation, seeking controls, caption toggle, restart from beginning, and video conversion.**
 
 Created by **Pramod Beema**
 
-## 🎯 5 Essential Features
+## 🎯 7 Essential Features
 
-### 1. 🎧 Audio Track Navigator
+### 1. 🔁 Hands-Free Auto-Scroll
+Click the on-screen **Auto** button in YouTube Shorts to automatically scroll to the next Short when the current one finishes. If toggled mid-video, it smoothly transitions to the next Short.
+
+### 2. ⚡ Playback Speed Controls
+Adjust playback speed using **>** (speed up) and **<** (slow down) from 0.25x up to 2.0x with on-screen speed feedback.
+
+### 3. 🎧 Audio Track Navigator
 Press **'a'** to instantly open the audio track selection menu with **full keyboard navigation** (`↑` / `↓` + `Enter`, number keys `1`–`9`, or press **'a'** again to cycle through tracks). Arrow navigation is strictly isolated so it will never scroll your Short!
 
-### 2. ⏩ Shorts Seeker (Customizable Duration)
+### 4. ⏩ Shorts Seeker (Customizable Duration)
 Use **arrow keys** (← →) to seek in YouTube Shorts with native-style visual feedback. Set your desired seek duration in seconds directly in the extension popup (slider or 2s, 5s, 10s, 15s quick chips).
 
-### 3. 🔄 Shorts to Video Converter
+### 5. 🔄 Shorts to Video Converter
 Convert YouTube Shorts to regular video format with a click on the YouTube-native on-screen button or the **Ctrl+Shift+F** keyboard shortcut.
 
-### 4. 💬 Caption Toggle
+### 6. 💬 Caption Toggle
 Press **'c'** to toggle or select captions in YouTube Shorts with full keyboard support (`↑` / `↓` + `Enter` or press **'c'** again to cycle).
 
-### 5. ⏮️ Restart from Beginning
+### 7. ⏮️ Restart from Beginning
 Press **'0'** to restart the current Short from the beginning (`0:00`), matching YouTube's native behavior for regular videos.
 
 ## ⌨️ Keyboard Shortcuts
 
 | Shortcut | Action |
 |----------|--------|
+| **&gt;** / **&lt;** (or Shift + . / ,) | Speed Up / Slow Down playback (0.25x – 2.0x) |
 | **a** | Open audio track menu / cycle audio tracks |
 | **c** | Toggle / cycle Captions in Shorts |
 | **0** | Restart Short from beginning (`0:00`) |
@@ -49,6 +56,11 @@ Press **'0'** to restart the current Short from the beginning (`0:00`), matching
 4. Click **Load unpacked**
 5. Select this folder
 6. Done! 🎉
+
+## 🆕 What's New in v1.6
+- **Hands-Free Auto-Scroll**: Dedicated on-screen toggle button above Convert button. Seamlessly moves to next video upon finish or immediately when enabled.
+- **Speed Adjustment**: `>` and `<` hotkeys to fine-tune playback rate with center HUD indicator.
+- **Synced Popup & On-Screen UI**: Cleaned popup with complete shortcut guide.
 
 ## 🆕 What's New in v1.5
 - **Native Action Button Integration**: Completely aligned the Convert button with YouTube's authentic Shorts action button architecture. It now inherits YouTube's genuine 3D specular rim light, ambient wash layers, and smooth non-scaling hover transitions.

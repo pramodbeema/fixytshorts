@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const seekDisplay = document.getElementById('seek-duration-val');
     const quickBtns = document.querySelectorAll('.seek-chip');
 
+    // ── SEEK DURATION ──────────────────────────────────────────────────
     function updateValue(val) {
         let num = parseInt(val, 10);
         if (isNaN(num) || num < 1) num = 5;
@@ -11,7 +12,6 @@ document.addEventListener('DOMContentLoaded', () => {
         seekInput.value = num;
         if (seekDisplay) seekDisplay.textContent = num + 's';
 
-        // Highlight matching chip if any
         quickBtns.forEach(btn => {
             if (parseInt(btn.getAttribute('data-val'), 10) === num) {
                 btn.classList.add('active');
@@ -37,12 +37,10 @@ document.addEventListener('DOMContentLoaded', () => {
         updateValue(stored);
     }
 
-    // Input change listener
     seekInput.addEventListener('input', (e) => {
         updateValue(e.target.value);
     });
 
-    // Quick chip click listener
     quickBtns.forEach(btn => {
         btn.addEventListener('click', () => {
             const val = btn.getAttribute('data-val');

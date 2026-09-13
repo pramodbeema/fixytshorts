@@ -1,7 +1,8 @@
 /* Fix YT Shorts - Content Styles */
 
-/* 1. Action Panel Convert Button (Matches YouTube's Native Shorts Action Button Styling) */
-#shorts-converter-wrapper {
+/* 1. Action Panel Injected Buttons (Convert + Auto-Scroll) */
+#shorts-converter-wrapper,
+#shorts-autoscroll-wrapper {
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
@@ -13,7 +14,10 @@
   z-index: 99 !important;
 }
 
-#shorts-converter-wrapper .shorts-converter-button {
+#shorts-converter-wrapper button,
+#shorts-autoscroll-wrapper button,
+#shorts-converter-wrapper .shorts-fyt-button,
+#shorts-autoscroll-wrapper .shorts-fyt-button {
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -32,18 +36,30 @@
   opacity: 1 !important;
   outline: none !important;
   position: relative !important;
-  overflow: hidden !important;
-  transform: none !important;
+  /* Match YouTube native translucent action button background */
+  background: rgba(255, 255, 255, 0.15) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
   transition: background-color 0.2s cubic-bezier(0.05, 0, 0, 1) !important;
 }
 
-#shorts-converter-wrapper .shorts-converter-button:hover,
-#shorts-converter-wrapper .shorts-converter-button:active {
-  transform: none !important;
+#shorts-converter-wrapper button:hover,
+#shorts-autoscroll-wrapper button:hover,
+#shorts-converter-wrapper .shorts-fyt-button:hover,
+#shorts-autoscroll-wrapper .shorts-fyt-button:hover {
+  background: rgba(255, 255, 255, 0.25) !important;
 }
 
-/* Style the SVG icon */
-#shorts-converter-wrapper svg {
+#shorts-converter-wrapper button:active,
+#shorts-autoscroll-wrapper button:active,
+#shorts-converter-wrapper .shorts-fyt-button:active,
+#shorts-autoscroll-wrapper .shorts-fyt-button:active {
+  background: rgba(255, 255, 255, 0.35) !important;
+}
+
+/* Style the SVG icons */
+#shorts-converter-wrapper svg,
+#shorts-autoscroll-wrapper svg {
   display: block !important;
   width: 24px !important;
   height: 24px !important;
@@ -51,8 +67,9 @@
   pointer-events: none !important;
 }
 
-/* Style the label ("Convert" text) - Exact YouTube typography */
-#shorts-converter-wrapper .label {
+/* Style the labels ("Convert" / "Auto" text) - Exact YouTube typography */
+#shorts-converter-wrapper .label,
+#shorts-autoscroll-wrapper .label {
   font-family: "YouTube Sans", "Roboto", Arial, sans-serif !important;
   font-size: 12px !important;
   font-weight: 500 !important;
@@ -65,23 +82,44 @@
   pointer-events: none !important;
 }
 
-/* Light Theme Overrides (if YouTube or system is in light mode) */
+/* Auto-Scroll ACTIVE state — glowing teal highlight */
+#shorts-autoscroll-wrapper.fyt-autoscroll-active button {
+  background: rgba(0, 200, 180, 0.25) !important;
+  box-shadow: 0 0 0 2px rgba(0, 200, 180, 0.6) !important;
+}
+
+#shorts-autoscroll-wrapper.fyt-autoscroll-active svg {
+  fill: rgb(0, 220, 195) !important;
+}
+
+#shorts-autoscroll-wrapper.fyt-autoscroll-active .label {
+  color: rgb(0, 220, 195) !important;
+  text-shadow: 0 0 8px rgba(0, 220, 195, 0.6) !important;
+}
+
+/* Light Theme Overrides */
 html[dark="false"] #shorts-converter-wrapper svg,
-[light-theme] #shorts-converter-wrapper svg {
+html[dark="false"] #shorts-autoscroll-wrapper svg,
+[light-theme] #shorts-converter-wrapper svg,
+[light-theme] #shorts-autoscroll-wrapper svg {
   fill: #0f0f0f !important;
 }
 
 html[dark="false"] #shorts-converter-wrapper .label,
-[light-theme] #shorts-converter-wrapper .label {
+html[dark="false"] #shorts-autoscroll-wrapper .label,
+[light-theme] #shorts-converter-wrapper .label,
+[light-theme] #shorts-autoscroll-wrapper .label {
   color: #0f0f0f !important;
   text-shadow: none !important;
 }
 
 @media (prefers-color-scheme: light) {
-  html:not([dark="true"]) #shorts-converter-wrapper svg {
+  html:not([dark="true"]) #shorts-converter-wrapper svg,
+  html:not([dark="true"]) #shorts-autoscroll-wrapper svg {
     fill: #0f0f0f !important;
   }
-  html:not([dark="true"]) #shorts-converter-wrapper .label {
+  html:not([dark="true"]) #shorts-converter-wrapper .label,
+  html:not([dark="true"]) #shorts-autoscroll-wrapper .label {
     color: #0f0f0f !important;
     text-shadow: none !important;
   }
@@ -98,4 +136,4 @@ html[dark="false"] #shorts-converter-wrapper .label,
 /* Ensure no pseudo-element causes vertical expansion */
 .fyt-item-focused::after {
   content: none !important;
-}
+}
