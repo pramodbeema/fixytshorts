@@ -2,7 +2,7 @@
 
 ![image](https://github.com/user-attachments/assets/1e83c450-80e3-4d0e-86f5-592c305d987c)
 
-# Fix YT Shorts (v1.4)
+# Fix YT Shorts (v1.5)
 
 **A powerful Chrome extension to fix and enhance the YouTube Shorts experience with 5 essential features: audio navigation, seeking controls, caption toggle, restart from beginning, and video conversion.**
 
@@ -49,6 +49,12 @@ Press **'0'** to restart the current Short from the beginning (`0:00`), matching
 4. Click **Load unpacked**
 5. Select this folder
 6. Done! 🎉
+
+## 🆕 What's New in v1.5
+- **Native Action Button Integration**: Completely aligned the Convert button with YouTube's authentic Shorts action button architecture. It now inherits YouTube's genuine 3D specular rim light, ambient wash layers, and smooth non-scaling hover transitions.
+- **Symmetric Convert Icon**: Replaced the previous blocky tile icon with YouTube's clean, symmetric video convert cycle icon (`viewBox="0 0 24 24"`).
+- **Pixel-Perfect Spacing**: Calibrated action bar vertical spacing to exactly 9px, ensuring consistent alignment with native Like, Comment, and Share buttons.
+- **Strict Trusted Types Compliance**: Refactored DOM injection to fully respect YouTube's Trusted Types policy without innerHTML violations.
 
 ## 🆕 What's New in v1.4
 - **Full Keyboard Menu Navigation**: Audio Track and Caption menus now support arrow keys (`↑` / `↓`) and `Enter`, number keys (`1`–`9`), or quick cycling with `a` / `c` without requiring a mouse.

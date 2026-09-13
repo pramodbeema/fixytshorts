@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "Fix YT Shorts by Pramod Beema",
-    "version": "1.4",
+    "version": "1.5",
     "description": "YouTube Shorts: Audio track navigation, Enable Seeking, Caption toggle, Restart short, Play Short as Video.",
     "author": "Pramod Beema",
     "developer": {

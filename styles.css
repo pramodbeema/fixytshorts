@@ -1,12 +1,14 @@
 /* Fix YT Shorts - Content Styles */
 
-/* 1. Action Panel Convert Button (Matches YouTube's Native Pill & Circular Icon Styling) */
+/* 1. Action Panel Convert Button (Matches YouTube's Native Shorts Action Button Styling) */
 #shorts-converter-wrapper {
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
   justify-content: center !important;
-  margin-bottom: 16px !important;
+  margin-top: 0 !important;
+  margin-bottom: 9px !important;
+  padding: 0 !important;
   user-select: none !important;
   z-index: 99 !important;
 }
@@ -16,17 +18,12 @@
   align-items: center !important;
   justify-content: center !important;
 
-  /* YouTube Action Button Specs */
+  /* Native YouTube Action Button Dimensions & Radius */
   width: 48px !important;
   height: 48px !important;
   min-width: 48px !important;
   min-height: 48px !important;
-  border-radius: 50% !important;
-
-  /* Native frosted action button look */
-  background-color: rgba(255, 255, 255, 0.1) !important;
-  backdrop-filter: blur(8px) !important;
-  -webkit-backdrop-filter: blur(8px) !important;
+  border-radius: 24px !important;
 
   padding: 0 !important;
   margin: 0 !important;
@@ -36,17 +33,13 @@
   outline: none !important;
   position: relative !important;
   overflow: hidden !important;
-  transition: background-color 0.2s cubic-bezier(0.05, 0, 0, 1), transform 0.15s ease !important;
+  transform: none !important;
+  transition: background-color 0.2s cubic-bezier(0.05, 0, 0, 1) !important;
 }
 
-#shorts-converter-wrapper .shorts-converter-button:hover {
-  background-color: rgba(255, 255, 255, 0.2) !important;
-  transform: scale(1.05) !important;
-}
-
+#shorts-converter-wrapper .shorts-converter-button:hover,
 #shorts-converter-wrapper .shorts-converter-button:active {
-  background-color: rgba(255, 255, 255, 0.28) !important;
-  transform: scale(0.95) !important;
+  transform: none !important;
 }
 
 /* Style the SVG icon */
@@ -54,17 +47,17 @@
   display: block !important;
   width: 24px !important;
   height: 24px !important;
-  fill: #f1f1f1 !important;
+  fill: rgb(241, 241, 241) !important;
   pointer-events: none !important;
 }
 
 /* Style the label ("Convert" text) - Exact YouTube typography */
 #shorts-converter-wrapper .label {
-  font-family: "Roboto", "YouTube Sans", Arial, sans-serif !important;
+  font-family: "YouTube Sans", "Roboto", Arial, sans-serif !important;
   font-size: 12px !important;
-  font-weight: 400 !important;
+  font-weight: 500 !important;
   line-height: 16px !important;
-  color: #f1f1f1 !important;
+  color: rgb(241, 241, 241) !important;
   margin-top: 6px !important;
   text-align: center !important;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8) !important;
@@ -73,16 +66,6 @@
 }
 
 /* Light Theme Overrides (if YouTube or system is in light mode) */
-html[dark="false"] #shorts-converter-wrapper .shorts-converter-button,
-[light-theme] #shorts-converter-wrapper .shorts-converter-button {
-  background-color: rgba(0, 0, 0, 0.05) !important;
-}
-
-html[dark="false"] #shorts-converter-wrapper .shorts-converter-button:hover,
-[light-theme] #shorts-converter-wrapper .shorts-converter-button:hover {
-  background-color: rgba(0, 0, 0, 0.1) !important;
-}
-
 html[dark="false"] #shorts-converter-wrapper svg,
 [light-theme] #shorts-converter-wrapper svg {
   fill: #0f0f0f !important;
@@ -95,9 +78,6 @@ html[dark="false"] #shorts-converter-wrapper .label,
 }
 
 @media (prefers-color-scheme: light) {
-  html:not([dark="true"]) #shorts-converter-wrapper .shorts-converter-button {
-    background-color: rgba(0, 0, 0, 0.05) !important;
-  }
   html:not([dark="true"]) #shorts-converter-wrapper svg {
     fill: #0f0f0f !important;
   }

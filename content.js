@@ -565,37 +565,106 @@
 
         if (!actionPanel) return;
 
-        const wrapper = document.createElement('div');
-        wrapper.id = 'shorts-converter-wrapper';
-        wrapper.className = 'style-scope ytd-reel-player-overlay-renderer';
+        // Try cloning native button template for 100% authentic 3D light & wash effect
+        const nativeHolder = (likeRenderer && likeRenderer.querySelector('button'))
+            ? likeRenderer
+            : actionPanel.querySelector('like-button-view-model, share-button-view-model, ytd-like-button-renderer, ytd-share-button-renderer');
 
-        const button = document.createElement('button');
-        button.id = 'shorts-converter-btn';
-        button.className = 'shorts-converter-button';
-        button.setAttribute('aria-label', 'Convert to regular video (Ctrl+Shift+F)');
-        button.title = 'Convert to regular video (Ctrl+Shift+F)';
+        let wrapper;
+        if (nativeHolder) {
+            wrapper = nativeHolder.cloneNode(true);
+            wrapper.id = 'shorts-converter-wrapper';
 
-        button.innerHTML = `
-            <div class="ytSpecTouchFeedbackShapeFill"></div>
-            <svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" focusable="false">
-                <g>
-                    <path d="M10 10H8V8h2v2zm6 0h-2V8h2v2zm-2 2H8v-2h4v2zm6 0h-2v-2h2v2zM4 6v14h16V6H4zm14 12H6V8h12v10z"></path>
-                </g>
-            </svg>
-        `;
+            const button = wrapper.querySelector('button');
+            if (button) {
+                button.id = 'shorts-converter-btn';
+                button.setAttribute('aria-label', 'Convert to regular video (Ctrl+Shift+F)');
+                button.title = 'Convert to regular video (Ctrl+Shift+F)';
 
-        button.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            convertToRegularVideo();
-        });
+                // Replace icon inside icon container
+                const iconWrapper = button.querySelector('.ytSpecButtonShapeNextIcon') || button.querySelector('yt-icon') || button;
+                if (iconWrapper) {
+                    if (typeof iconWrapper.replaceChildren === 'function') {
+                        iconWrapper.replaceChildren();
+                    } else {
+                        while (iconWrapper.firstChild) iconWrapper.removeChild(iconWrapper.firstChild);
+                    }
+                    iconWrapper.style.cssText = 'position: relative; z-index: 2; display: flex; align-items: center; justify-content: center; width: 24px; height: 24px;';
 
-        const label = document.createElement('div');
-        label.className = 'label style-scope ytd-reel-player-overlay-renderer';
-        label.textContent = 'Convert';
+                    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                    svg.setAttribute('viewBox', '0 0 24 24');
+                    svg.setAttribute('width', '24');
+                    svg.setAttribute('height', '24');
+                    svg.style.cssText = 'display: block; width: 24px; height: 24px; fill: rgb(241, 241, 241); pointer-events: none;';
 
-        wrapper.appendChild(button);
-        wrapper.appendChild(label);
+                    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    path.setAttribute('d', 'M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z');
+                    path.setAttribute('fill', 'rgb(241, 241, 241)');
+
+                    svg.appendChild(path);
+                    iconWrapper.appendChild(svg);
+                }
+
+                button.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    convertToRegularVideo();
+                });
+            }
+
+            // Update label text to "Convert"
+            const label = wrapper.querySelector('label, [class*="label"], .ytSpecButtonShapeWithLabelHost') || wrapper;
+            const walker = document.createTreeWalker(label, NodeFilter.SHOW_TEXT, null, false);
+            let node;
+            while ((node = walker.nextNode())) {
+                if (node.textContent.trim().length > 0) {
+                    node.textContent = 'Convert';
+                    break;
+                }
+            }
+        } else {
+            // Standalone fallback
+            wrapper = document.createElement('div');
+            wrapper.id = 'shorts-converter-wrapper';
+            wrapper.className = 'style-scope ytd-reel-player-overlay-renderer';
+
+            const button = document.createElement('button');
+            button.id = 'shorts-converter-btn';
+            button.className = 'shorts-converter-button ytSpecButtonShapeNextHost ytSpecButtonShapeNextTonal ytSpecButtonShapeNextMono ytSpecButtonShapeNextSizeL ytSpecButtonShapeNextIconButton ytSpecButtonShapeNextEnableBackdropFilterExperiment ytSpecButtonShapeNextMainstageIconSize ytSpecButtonShapeNextMainstagePadding';
+            button.setAttribute('aria-label', 'Convert to regular video (Ctrl+Shift+F)');
+            button.title = 'Convert to regular video (Ctrl+Shift+F)';
+
+            const iconDiv = document.createElement('div');
+            iconDiv.className = 'ytSpecButtonShapeNextIcon ytSpecButtonShapeNextElevatedContent';
+            iconDiv.style.cssText = 'position: relative; z-index: 2; display: flex; align-items: center; justify-content: center; width: 24px; height: 24px;';
+
+            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svg.setAttribute('viewBox', '0 0 24 24');
+            svg.setAttribute('width', '24');
+            svg.setAttribute('height', '24');
+            svg.style.cssText = 'display: block; width: 24px; height: 24px; fill: rgb(241, 241, 241); pointer-events: none;';
+
+            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            path.setAttribute('d', 'M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z');
+            path.setAttribute('fill', 'rgb(241, 241, 241)');
+
+            svg.appendChild(path);
+            iconDiv.appendChild(svg);
+            button.appendChild(iconDiv);
+
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                convertToRegularVideo();
+            });
+
+            const label = document.createElement('div');
+            label.className = 'label style-scope ytd-reel-player-overlay-renderer';
+            label.textContent = 'Convert';
+
+            wrapper.appendChild(button);
+            wrapper.appendChild(label);
+        }
 
         if (likeRenderer && likeRenderer.parentElement === actionPanel) {
             actionPanel.insertBefore(wrapper, likeRenderer);
@@ -817,5 +886,5 @@
 
     setInterval(createConvertButton, 500);
 
-    console.log('Fix YT Shorts by Pramod Beema - All features active (v1.4)!');
+    console.log('Fix YT Shorts by Pramod Beema - All features active (v1.5)!');
 })();
