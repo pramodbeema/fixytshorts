@@ -1,0 +1,58 @@
+{
+    "manifest_version": 3,
+    "name": "Fix YT Shorts by Pramod Beema",
+    "version": "1.6",
+    "description": "Keyboard shortcuts for YouTube Shorts: auto-scroll, speed, custom seeking, audio & captions, restart from 0, and video conversion.",
+    "author": "Pramod Beema",
+    "developer": {
+        "name": "Pramod Beema",
+        "url": "https://github.com/pramodbeema"
+    },
+    "permissions": [
+        "activeTab",
+        "storage"
+    ],
+    "host_permissions": [
+        "https://www.youtube.com/*"
+    ],
+    "content_scripts": [
+        {
+            "matches": [
+                "*://*.youtube.com/*"
+            ],
+            "js": [
+                "content.js"
+            ],
+            "css": [
+                "styles.css"
+            ],
+            "run_at": "document_end"
+        }
+    ],
+    "commands": {
+        "convert-short": {
+            "suggested_key": {
+                "default": "Ctrl+Shift+F",
+                "mac": "Command+Shift+F"
+            },
+            "description": "Convert YouTube Short to regular video"
+        }
+    },
+    "action": {
+        "default_popup": "popup.html",
+        "default_icon": {
+            "16": "icon16.png",
+            "48": "icon48.png",
+            "128": "icon128.png"
+        },
+        "default_title": "Fix YT Shorts"
+    },
+    "background": {
+        "service_worker": "background.js"
+    },
+    "icons": {
+        "16": "icon16.png",
+        "48": "icon48.png",
+        "128": "icon128.png"
+    }
+}
