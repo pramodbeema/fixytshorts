@@ -1,7 +1,3 @@
-![promotile](https://github.com/user-attachments/assets/e6d03125-118f-424f-9578-9a6399be991d)
-
-![image](https://github.com/user-attachments/assets/1e83c450-80e3-4d0e-86f5-592c305d987c)
-
 # Fix YT Shorts (v1.6)
 
 **A powerful Chrome extension to fix and enhance the YouTube Shorts experience with 7 essential features: hands-free auto-scroll, playback speed controls, audio navigation, seeking controls, caption toggle, restart from beginning, and video conversion.**
